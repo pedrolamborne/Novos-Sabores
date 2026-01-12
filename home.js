@@ -133,4 +133,4 @@ function enviarWhatsApp(){
     const link = `https://wa.me/${numeroRestaurante}?text=${encodeURIComponent(msg)}`;
     window.open(link,'_blank');
   });
-                       }
+                                                               }
