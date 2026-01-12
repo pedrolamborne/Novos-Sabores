@@ -1,6 +1,11 @@
+// ================= FIRESTORE =================
+const db = firebase.firestore();
+
+// ================= USUÁRIO =================
 const uid = localStorage.getItem('uid');
 if(!uid){ window.location.href = 'index.html'; }
 
+// ================= CARDÁPIO =================
 const cardapioContainer = document.getElementById('cardapioContainer');
 let carrinho = [];
 const contadorCarrinho = document.getElementById('contadorCarrinho');
@@ -9,49 +14,51 @@ function atualizarCarrinho(){
   contadorCarrinho.innerText = carrinho.reduce((acc,item)=>acc+item.quantidade,0);
 }
 
-// Logout
-document.getElementById('logoutBtnNav').addEventListener('click', ()=>{
-  auth.signOut().then(()=>{
-    localStorage.removeItem('uid');
-    window.location.href='index.html';
-  });
-});
-
-// Hamburger
-const hamburger = document.getElementById('hamburger');
-const navLinks = document.getElementById('navLinks');
-hamburger.addEventListener('click', ()=>{
-  navLinks.classList.toggle('active');
-  hamburger.innerHTML = navLinks.classList.contains('active') ? '&times;' : '&#9776;';
-});
-
-// Perfil
-const userIcon = document.getElementById('userIcon');
-const perfilCard = document.getElementById('perfilCard');
-const fecharPerfil = document.getElementById('fecharPerfil');
-userIcon.addEventListener('click', ()=>{ perfilCard.classList.toggle('hidden'); });
-fecharPerfil.addEventListener('click', ()=>{ perfilCard.classList.add('hidden'); });
-
-// Carregar dados do usuário
-db.collection('usuarios').doc(uid).get().then(doc=>{
-  if(doc.exists){
-    const data = doc.data();
-    document.getElementById('nomeUsuario').innerText = data.nome;
-    document.getElementById('emailUsuario').innerText = data.email;
-    document.getElementById('telefoneUsuario').innerText = data.telefone;
-    document.getElementById('enderecoUsuario').innerText = data.endereco;
-
-    const historico = data.historicoPedidos || [];
-    const historicoEl = document.getElementById('historicoPedidos');
-    historico.forEach(pedido=>{
-      const li = document.createElement('li');
-      li.innerText = `${pedido.nome} - ${pedido.quantidade}x`;
-      historicoEl.appendChild(li);
-    });
+// ================= PRODUTOS PRONTOS =================
+const produtos = [
+  {
+    id: 1,
+    nome: "Hambúrguer Clássico",
+    descricao: "Carne suculenta, queijo, alface e molho especial",
+    preco: 1500,
+    estoque: 10,
+    img: "images/hamburguer.jpg"  // da galeria
+  },
+  {
+    id: 2,
+    nome: "Pizza Margherita",
+    descricao: "Tomate, mussarela e manjericão",
+    preco: 2500,
+    estoque: 5,
+    img: "images/pizza.jpg" // da galeria
+  },
+  {
+    id: 3,
+    nome: "Batata Frita",
+    descricao: "Batatas crocantes fritas na hora",
+    preco: 800,
+    estoque: 20,
+    img: "images/batata.jpg" // da galeria
+  },
+  {
+    id: 4,
+    nome: "Refrigerante",
+    descricao: "Coca-Cola 350ml",
+    preco: 400,
+    estoque: 15,
+    img: "images/refrigerante.jpg" // da galeria
+  },
+  {
+    id: 5,
+    nome: "Salada Verde",
+    descricao: "Mix de alface, rúcula e tomate",
+    preco: 900,
+    estoque: 10,
+    img: "images/salada.jpg" // da galeria
   }
-});
+];
 
-// Renderizar produtos
+// ================= RENDERIZAR PRODUTOS =================
 function renderProduto(produto){
   const div = document.createElement('div');
   div.classList.add('cardapio-item');
@@ -78,7 +85,7 @@ function renderProduto(produto){
   cardapioContainer.appendChild(div);
 }
 
-// Adicionar produto
+// ================= ADICIONAR PRODUTO PELO FORM =================
 document.getElementById('adicionarProdutoBtn').addEventListener('click', ()=>{
   const img = document.getElementById('imagemProduto').value;
   const nome = document.getElementById('nomeProduto').value;
@@ -97,7 +104,7 @@ document.getElementById('adicionarProdutoBtn').addEventListener('click', ()=>{
   });
 });
 
-// Carregar produtos do Firestore
+// ================= CARREGAR PRODUTOS FIRESTORE =================
 db.collection('produtos').get().then(querySnapshot=>{
   querySnapshot.forEach(doc=>{
     const produto = doc.data();
@@ -106,7 +113,7 @@ db.collection('produtos').get().then(querySnapshot=>{
   });
 });
 
-// Finalizar pedido
+// ================= FINALIZAR PEDIDO =================
 document.getElementById('finalizarPedidoBtn').addEventListener('click', ()=>{
   if(carrinho.length === 0){ alert('Carrinho vazio!'); return; }
   const userRef = db.collection('usuarios').doc(uid);
@@ -122,6 +129,7 @@ document.getElementById('finalizarPedidoBtn').addEventListener('click', ()=>{
   });
 });
 
+// ================= ENVIAR WHATSAPP =================
 function enviarWhatsApp(){
   const userRef = db.collection('usuarios').doc(uid);
   userRef.get().then(doc=>{
@@ -133,4 +141,44 @@ function enviarWhatsApp(){
     const link = `https://wa.me/${numeroRestaurante}?text=${encodeURIComponent(msg)}`;
     window.open(link,'_blank');
   });
-                                                               }
+}
+
+// ================= NAVBAR =================
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+hamburger.addEventListener('click', ()=>{
+  navLinks.classList.toggle('active');
+  hamburger.innerHTML = navLinks.classList.contains('active') ? '&times;' : '&#9776;';
+});
+
+// ================= PERFIL =================
+const userIcon = document.getElementById('userIcon');
+const perfilCard = document.getElementById('perfilCard');
+const fecharPerfil = document.getElementById('fecharPerfil');
+userIcon.addEventListener('click', ()=>{ perfilCard.classList.toggle('hidden'); });
+fecharPerfil.addEventListener('click', ()=>{ perfilCard.classList.add('hidden'); });
+
+// ================= CARREGAR DADOS DO USUÁRIO =================
+db.collection('usuarios').doc(uid).get().then(doc=>{
+  if(doc.exists){
+    const data = doc.data();
+    document.getElementById('nomeUsuario').innerText = data.nome;
+    document.getElementById('emailUsuario').innerText = data.email;
+    document.getElementById('telefoneUsuario').innerText = data.telefone;
+    document.getElementById('enderecoUsuario').innerText = data.endereco;
+
+    const historico = data.historicoPedidos || [];
+    const historicoEl = document.getElementById('historicoPedidos');
+    historico.forEach(pedido=>{
+      const li = document.createElement('li');
+      li.innerText = `${pedido.nome} - ${pedido.quantidade}x`;
+      historicoEl.appendChild(li);
+    });
+  }
+});
+
+// ================= INICIALIZAÇÃO =================
+window.onload = function() {
+  produtos.forEach(produto => renderProduto(produto));
+  atualizarCarrinho();
+};
