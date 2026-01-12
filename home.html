@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bons Sabores - Home</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="firebase-config.js"></script>
+</head>
+<body>
+
+<!-- Navbar Hamburger -->
+<nav class="navbar">
+  <div class="logo">
+    <img src="logo.png" alt="Bons Sabores" id="logoImg">
+  </div>
+
+  <div class="hamburger" id="hamburger">&#9776;</div>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#inicio">Início</a></li>
+    <li><a href="#cardapioContainer">Cardápio</a></li>
+    <li><a href="#contato">Contato</a></li>
+    <li><button id="logoutBtnNav" class="btn-small">Sair</button></li>
+  </ul>
+
+  <div class="nav-icons">
+    <div id="userIcon" class="user-icon">👤</div>
+    <div id="carrinho">🛒 <span id="contadorCarrinho">0</span></div>
+  </div>
+</nav>
+
+<!-- Perfil do Usuário -->
+<div id="perfilCard" class="perfil-card hidden">
+  <h2>Meu Perfil</h2>
+  <p><strong>Nome:</strong> <span id="nomeUsuario"></span></p>
+  <p><strong>Email:</strong> <span id="emailUsuario"></span></p>
+  <p><strong>Telefone:</strong> <span id="telefoneUsuario"></span></p>
+  <p><strong>Endereço:</strong> <span id="enderecoUsuario"></span></p>
+  <button id="fecharPerfil" class="btn">Fechar</button>
+</div>
+
+<!-- Conteúdo -->
+<div class="home-container" id="inicio">
+  <h1>Bons Sabores</h1>
+
+  <h2>Cardápio</h2>
+  <div class="cardapio-container" id="cardapioContainer"></div>
+
+  <h2>Adicionar Produto</h2>
+  <input type="text" id="imagemProduto" placeholder="URL da imagem">
+  <input type="text" id="nomeProduto" placeholder="Nome do Produto">
+  <input type="text" id="descricaoProduto" placeholder="Descrição">
+  <input type="number" id="precoProduto" placeholder="Preço (Kz)">
+  <input type="number" id="estoqueProduto" placeholder="Estoque">
+  <button id="adicionarProdutoBtn" class="btn">Adicionar Produto</button>
+
+  <h2>Histórico de Pedidos</h2>
+  <ul id="historicoPedidos"></ul>
+
+  <button id="finalizarPedidoBtn" class="btn">Finalizar Pedido</button>
+
+  <!-- Contato -->
+  <div id="contato">
+    <h2>Contato</h2>
+    <p>Telefone: 244XXXXXXXXX</p>
+    <p>Email: restaurante@bonsabores.com</p>
+  </div>
+</div>
+
+<script src="home.js"></script>
+</body>
+</html>
